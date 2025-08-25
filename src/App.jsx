@@ -10,22 +10,22 @@ import { useState } from "react";
 
 function App() {
   const baseUrl = "https://text.pollinations.ai/";
-  let aiReplay = "";
-
   const [userMessage, setUserMessage] = useState({
     id: "",
     message: "",
   });
   const [messages, setMessages] = useState([]);
 
-  function fetchUserMessage(e) {
+  // Read user input message
+  function readUserMessage(e) {
     setUserMessage({
       id: "user",
       message: e.target.value,
     });
   }
 
-  function addUserMessages() {
+  // Add user message to messages array and fetch AI answer
+  function addMessages() {
     setMessages((m) => [...m, userMessage]);
     setUserMessage({
       id: "",
@@ -35,13 +35,14 @@ function App() {
     fetchAnswer();
   }
 
+  // Fetch AI response from API and add it to messages array
   function fetchAnswer() {
     fetch(baseUrl + userMessage.message)
       .then((response) => {
         return response.text();
       })
       .then((data) => {
-        aiReplay = data;
+        setMessages((m) => [...m, { id: "ai", message: data }]);
       });
   }
 
@@ -57,11 +58,8 @@ function App() {
               {message.message}
             </p>
           ) : (
-            <p className="mr-24 self-end">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure,
-              exercitationem. Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Consequatur voluptatem a, alias libero consequuntur quam
-              laborum excepturi est sapiente nobis! Lorem ipsum dolor sit amet.
+            <p key={index} className="mr-24 self-end">
+              {message.message}
             </p>
           ),
         )}
@@ -72,13 +70,13 @@ function App() {
           placeholder="سوال خود را مطرح کنید ..."
           className="field-sizing-content max-h-80 min-h-32 w-full resize-none p-6 text-justify outline-none"
           value={userMessage.message}
-          onChange={fetchUserMessage}
+          onChange={readUserMessage}
         ></textarea>
 
         <button
           type="button"
           className="absolute bottom-6 left-6 h-8 w-8 cursor-pointer rounded-full bg-gray-200 text-white transition-colors duration-300 ease-in-out hover:bg-black"
-          onClick={addUserMessages}
+          onClick={addMessages}
         >
           <FontAwesomeIcon icon="fa-solid fa-arrow-up" />
         </button>
