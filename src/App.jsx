@@ -32,13 +32,16 @@ function App() {
       message: "",
     });
 
-    fetchAnswer();
+    fetchAnswerAndUpdateMessages();
   }
 
   // Fetch AI response from API and add it to messages array
-  function fetchAnswer() {
+  function fetchAnswerAndUpdateMessages() {
     // Add a loading message indicating AI response is being fetched
-    setMessages((m) => [...m, { id: "loading", message: "در حال دریافت ..." }]);
+    setMessages((m) => [
+      ...m,
+      { id: "loading", message: "در حال دریافت پاسخ ..." },
+    ]);
 
     fetch(baseUrl + userMessage.message)
       .then((response) => {
@@ -49,7 +52,9 @@ function App() {
           // Delete the loading message from the messages array
           m = m.filter(
             (msg) =>
-              !(msg.id === "loading" && msg.message === "در حال دریافت ..."),
+              !(
+                msg.id === "loading" && msg.message === "در حال دریافت پاسخ ..."
+              ),
           );
 
           return [...m, { id: "ai", message: data }];
@@ -58,7 +63,7 @@ function App() {
   }
 
   return (
-    <section className="mx-auto flex h-dvh max-w-3xl flex-col justify-between overflow-auto p-4 text-justify">
+    <section className="mx-auto flex h-dvh max-w-3xl flex-col justify-between overflow-auto p-4 text-justify leading-loose">
       <div className="flex flex-col gap-y-8 overflow-auto">
         {messages.map((message, index) =>
           message.id === "user" ? (
