@@ -9,6 +9,9 @@ import "./assets/fonts/vazir/vazir.css";
 import { useState } from "react";
 
 function App() {
+  const baseUrl = "https://text.pollinations.ai/";
+  let aiReplay = "";
+
   const [userMessage, setUserMessage] = useState({
     id: "",
     message: "",
@@ -28,6 +31,18 @@ function App() {
       id: "",
       message: "",
     });
+
+    fetchAnswer();
+  }
+
+  function fetchAnswer() {
+    fetch(baseUrl + userMessage.message)
+      .then((response) => {
+        return response.text();
+      })
+      .then((data) => {
+        aiReplay = data;
+      });
   }
 
   return (
