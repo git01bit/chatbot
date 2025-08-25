@@ -37,12 +37,22 @@ function App() {
 
   // Fetch AI response from API and add it to messages array
   function fetchAnswer() {
+    // Add a loading message indicating AI response is being fetched
+    setMessages((m) => [...m, { id: "ai", message: "در حال دریافت ..." }]);
+
     fetch(baseUrl + userMessage.message)
       .then((response) => {
         return response.text();
       })
       .then((data) => {
-        setMessages((m) => [...m, { id: "ai", message: data }]);
+        setMessages((m) => {
+          // Delete the loading message from the messages array
+          m = m.filter(
+            (msg) => !(msg.id === "ai" && msg.message === "در حال دریافت ..."),
+          );
+
+          return [...m, { id: "ai", message: data }];
+        });
       });
   }
 
