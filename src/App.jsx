@@ -38,7 +38,7 @@ function App() {
   // Fetch AI response from API and add it to messages array
   function fetchAnswer() {
     // Add a loading message indicating AI response is being fetched
-    setMessages((m) => [...m, { id: "ai", message: "در حال دریافت ..." }]);
+    setMessages((m) => [...m, { id: "loading", message: "در حال دریافت ..." }]);
 
     fetch(baseUrl + userMessage.message)
       .then((response) => {
@@ -48,7 +48,8 @@ function App() {
         setMessages((m) => {
           // Delete the loading message from the messages array
           m = m.filter(
-            (msg) => !(msg.id === "ai" && msg.message === "در حال دریافت ..."),
+            (msg) =>
+              !(msg.id === "loading" && msg.message === "در حال دریافت ..."),
           );
 
           return [...m, { id: "ai", message: data }];
@@ -65,6 +66,10 @@ function App() {
               key={index}
               className="ml-24 w-fit rounded-full bg-gray-100 px-8 py-2"
             >
+              {message.message}
+            </p>
+          ) : message.id === "loading" ? (
+            <p key={index} className="mr-24 self-end text-gray-400">
               {message.message}
             </p>
           ) : (
@@ -85,7 +90,7 @@ function App() {
 
         <button
           type="button"
-          className="absolute bottom-6 left-6 h-8 w-8 cursor-pointer rounded-full bg-gray-200 text-white transition-colors duration-300 ease-in-out hover:bg-black"
+          className={`absolute bottom-6 left-6 h-8 w-8 cursor-pointer rounded-full text-white transition-colors duration-300 ease-in-out hover:bg-black ${userMessage.message ? "bg-gray-400" : "bg-gray-200"}`}
           onClick={addMessages}
         >
           <FontAwesomeIcon icon="fa-solid fa-arrow-up" />
