@@ -59,6 +59,25 @@ function App() {
 
           return [...m, { id: "ai", message: data }];
         });
+      })
+      .catch(() => {
+        setMessages((m) => {
+          // Delete the loading message from the messages array
+          m = m.filter(
+            (msg) =>
+              !(
+                msg.id === "loading" && msg.message === "در حال دریافت پاسخ ..."
+              ),
+          );
+
+          return [
+            ...m,
+            {
+              id: "ai",
+              message: "متاسفانه مشکلی پیش آمده، لطفا مجدد تلاش نمائید.",
+            },
+          ];
+        });
       });
   }
 
